@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
-
+import sys
+print("SETTINGS CHARGE:", __file__, file=sys.stderr)
+print("DATABASE_URL dans settings:", os.environ.get('DATABASE_URL', 'VIDE'), file=sys.stderr)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-only-change-in-production')
