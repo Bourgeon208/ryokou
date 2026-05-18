@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes messages — Gaëtan au Japon{% endblock %}
+
+{% block content %}
+<section class="posts-section">
+  <div class="container">
+    <div class="page-header">
+      <h1>Mes messages envoyés</h1>
+      <a href="{% url 'send_message' %}" class="btn btn-primary">Nouveau message</a>
+    </div>
+
+    {% if sent_messages %}
+      <div class="messages-list">
+        {% for msg in sent_messages %}
+          <div class="message-item {% if not msg.read %}message-item--unread{% endif %}">
+            <div class="message-item__header">
+              <strong class="message-item__subject">{{ msg.subject }}</strong>
+              <time class="message-item__date">{{ msg.created_at|date:"j F Y à H:i" }}</time>
+            </div>
+            <p class="message-item__preview">{{ msg.content|truncatewords:20 }}</p>
+            <div class="message-item__status">
+              {% if msg.read %}
+                <span class="status status--read">✓ Lu</span>
+              {% else %}
+                <span class="status status--unread">En attente</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">✉</div>
+        <p>Vous n'avez encore envoyé aucun message.</p>
+        <a href="{% url 'send_message' %}" class="btn btn-primary">Envoyer un message</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

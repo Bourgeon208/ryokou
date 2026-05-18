@@ -1,0 +1,65 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block content %}
+<div id="content-main">
+
+  <div style="background:white;border:1px solid #ddd;border-radius:8px;padding:24px;margin-bottom:24px;">
+    <h2 style="margin:0 0 4px;font-size:20px">{{ original.subject }}</h2>
+    <p style="color:#888;margin:0;font-size:13px">
+      Conversation avec <strong>{{ original.user.username }}</strong>
+      — démarrée le {{ original.created_at|date:"j F Y" }}
+    </p>
+  </div>
+
+  <!-- Fil de messages -->
+  <div style="max-height:460px;overflow-y:auto;border:1px solid #ddd;border-radius:8px;
+              padding:20px;background:#faf9f7;margin-bottom:20px;" id="msg-thread">
+    {% for msg in messages_list %}
+      <div style="margin-bottom:16px;text-align:{% if msg.is_from_admin %}right{% else %}left{% endif %}">
+        <div style="display:inline-block;max-width:72%;
+                    background:{% if msg.is_from_admin %}#1a1714{% else %}white{% endif %};
+                    color:{% if msg.is_from_admin %}white{% else %}#1a1714{% endif %};
+                    padding:10px 15px;border-radius:14px;
+                    border:{% if msg.is_from_admin %}none{% else %}1px solid #ddd{% endif %};
+                    text-align:left;">
+          <div style="font-size:11px;opacity:0.55;margin-bottom:5px">
+            {% if msg.is_from_admin %}Vous (Admin){% else %}{{ original.user.username }}{% endif %}
+            &nbsp;·&nbsp; {{ msg.created_at|date:"j F Y à H:i" }}
+          </div>
+          <div style="white-space:pre-wrap;font-size:14px;line-height:1.5">{{ msg.content }}</div>
+        </div>
+      </div>
+    {% empty %}
+      <p style="color:#aaa;text-align:center">Aucun message.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Formulaire de réponse -->
+  <div style="background:white;border:1px solid #ddd;border-radius:8px;padding:20px;">
+    <h3 style="margin:0 0 12px;font-size:15px;color:#333">Répondre</h3>
+    <form method="post">
+      {% csrf_token %}
+      <textarea name="_reply_content" rows="4" placeholder="Votre réponse..."
+        style="width:100%;padding:10px;border:1.5px solid #ddd;border-radius:6px;
+               font-family:inherit;font-size:14px;resize:vertical;box-sizing:border-box">
+      </textarea>
+      <div style="margin-top:12px">
+        <button type="submit" name="_send_reply" value="1"
+          style="background:#1a1714;color:white;border:none;padding:10px 28px;
+                 border-radius:20px;cursor:pointer;font-size:14px;font-family:inherit">
+          Envoyer ↑
+        </button>
+        <a href="../" style="margin-left:16px;color:#888;font-size:13px">← Retour à la liste</a>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<script>
+  // Scroll automatique en bas du fil
+  var t = document.getElementById('msg-thread');
+  if (t) t.scrollTop = t.scrollHeight;
+</script>
+{% endblock %}

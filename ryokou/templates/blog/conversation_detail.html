@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ conversation.subject }} — Messages{% endblock %}
+
+{% block content %}
+<div class="chat-page">
+  <div class="container">
+
+    <div class="chat-header">
+      <a href="{% url 'conversation_list' %}" class="back-link">← Retour</a>
+      <div class="chat-header__info">
+        <h1 class="chat-header__subject">{{ conversation.subject }}</h1>
+        <p class="chat-header__meta">
+          Conversation avec <strong>{{ conversation.user.username }}</strong>
+          · démarrée le {{ conversation.created_at|date:"j F Y" }}
+        </p>
+      </div>
+    </div>
+
+    <div class="chat-window" id="chat-window">
+      {% for msg in all_messages %}
+        <div class="chat-bubble {% if msg.is_from_admin %}chat-bubble--admin{% else %}chat-bubble--user{% endif %}">
+          <div class="chat-bubble__inner">
+            <div class="chat-bubble__meta">
+              {% if msg.is_from_admin %}Admin{% else %}{{ conversation.user.username }}{% endif %}
+              · {{ msg.created_at|date:"j F Y à H:i" }}
+            </div>
+            <div class="chat-bubble__content">{{ msg.content|linebreaks }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="chat-reply">
+      <form method="post" class="reply-form">
+        {% csrf_token %}
+        {{ reply_form.content }}
+        {% if reply_form.content.errors %}
+          <div class="form-error">{{ reply_form.content.errors }}</div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Envoyer ↑</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Scroll automatique en bas du fil
+  const win = document.getElementById('chat-window');
+  if (win) win.scrollTop = win.scrollHeight;
+</script>
+{% endblock %}

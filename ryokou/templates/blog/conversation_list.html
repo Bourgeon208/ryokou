@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages — Gaëtan au Japon{% endblock %}
+
+{% block content %}
+<section class="posts-section">
+  <div class="container">
+    <div class="page-header">
+      <h1>{% if user.is_staff %}Toutes les conversations{% else %}Mes messages{% endif %}</h1>
+      {% if not user.is_staff %}
+        <a href="{% url 'new_conversation' %}" class="btn btn-primary">+ Nouveau message</a>
+      {% endif %}
+    </div>
+
+    {% if conversations %}
+      <div class="conversations-list">
+        {% for conv in conversations %}
+          {% with last=conv.last_message %}
+          <a href="{% url 'conversation_detail' conv.pk %}" class="conv-item {% if user.is_staff and conv.unread_for_admin %}conv-item--unread{% elif not user.is_staff and conv.unread_for_user %}conv-item--unread{% endif %}">
+            <div class="conv-item__avatar">{{ conv.user.username|first|upper }}</div>
+            <div class="conv-item__body">
+              <div class="conv-item__header">
+                <span class="conv-item__user">{{ conv.user.username }}</span>
+                <span class="conv-item__subject">{{ conv.subject }}</span>
+                {% if user.is_staff and conv.unread_for_admin %}
+                  <span class="conv-badge">{{ conv.unread_for_admin }} nouveau</span>
+                {% elif not user.is_staff and conv.unread_for_user %}
+                  <span class="conv-badge">Réponse</span>
+                {% endif %}
+              </div>
+              {% if last %}
+                <p class="conv-item__preview">
+                  {% if last.is_from_admin %}Vous : {% endif %}
+                  {{ last.content|truncatewords:12 }}
+                </p>
+              {% endif %}
+            </div>
+            <time class="conv-item__date">{{ conv.updated_at|date:"j M" }}</time>
+          </a>
+          {% endwith %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">✉</div>
+        <p>Aucune conversation pour le moment.</p>
+        {% if not user.is_staff %}
+          <a href="{% url 'new_conversation' %}" class="btn btn-primary">Envoyer un message</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

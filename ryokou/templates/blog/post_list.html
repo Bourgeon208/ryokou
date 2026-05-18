@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Articles — Gaëtan au Japon{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="hero-title">Gaëtan au Japon<em>.</em></h1>
+  </div>
+  <div class="hero-deco"></div>
+</section>
+
+<section class="posts-section">
+  <div class="container">
+    {% if page_obj %}
+      <div class="posts-grid">
+        {% for post in page_obj %}
+          <article class="post-card">
+            {% if post.images.first %}
+              <a href="{{ post.get_absolute_url }}" class="post-card__image-link">
+                <div class="post-card__image">
+                  <img src="{{ post.images.first.image.url }}" alt="{{ post.images.first.caption|default:post.title }}">
+                  <div class="post-card__image-overlay"></div>
+                </div>
+              </a>
+            {% elif post.video or post.video_url %}
+              <a href="{{ post.get_absolute_url }}" class="post-card__image-link">
+                <div class="post-card__image post-card__image--video">
+                  <div class="video-thumb-icon">▶</div>
+                </div>
+              </a>
+            {% endif %}
+            <div class="post-card__body">
+              <div class="post-card__meta">
+                <time datetime="{{ post.created_at|date:'Y-m-d' }}">{{ post.created_at|date:"j F Y" }}</time>
+                <span class="meta-sep">·</span>
+                <span>{{ post.comment_count }} commentaire{{ post.comment_count|pluralize }}</span>
+              </div>
+              <h2 class="post-card__title">
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+              </h2>
+              <p class="post-card__excerpt">{{ post.content|truncatewords:25 }}</p>
+              <a href="{{ post.get_absolute_url }}" class="post-card__read-more">
+                Lire la suite <span class="arrow">→</span>
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_other_pages %}
+        <nav class="pagination">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">← Précédent</a>
+          {% endif %}
+          <span class="pagination-info">
+            Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+          </span>
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">Suivant →</a>
+          {% endif %}
+        </nav>
+      {% endif %}
+
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">✦</div>
+        <p>Aucun article pour le moment.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

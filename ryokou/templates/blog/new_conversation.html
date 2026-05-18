@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Nouveau message — Gaëtan au Japon{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card auth-card--wide">
+    <div class="auth-card__header">
+      <div class="auth-icon">✉</div>
+      <h1>Nouveau message</h1>
+      <p>Envoyez-moi un message privé</p>
+    </div>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Sujet</label>
+        {{ form.subject }}
+        {% if form.subject.errors %}<div class="form-error">{{ form.subject.errors }}</div>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        {{ form.first_message }}
+        {% if form.first_message.errors %}<div class="form-error">{{ form.first_message.errors }}</div>{% endif %}
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Envoyer</button>
+    </form>
+
+    <div class="auth-card__footer">
+      <p>Votre message sera lu uniquement par l'administrateur.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

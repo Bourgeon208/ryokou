@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Gaëtan au Japon{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="{% url 'post_list' %}" class="site-logo">
+        <span class="logo-mark">✦</span>
+        <span class="logo-text">Gaëtan au Japon</span>
+      </a>
+      <nav class="site-nav">
+        <a href="{% url 'post_list' %}">Articles</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'conversation_list' %}" class="nav-messages">
+            Messages
+            {% if unread_messages_count > 0 %}
+              <span class="badge">{{ unread_messages_count }}</span>
+            {% endif %}
+          </a>
+          {% if not user.is_staff %}
+            <a href="{% url 'new_conversation' %}" class="nav-contact">Contacter</a>
+          {% endif %}
+          {% if user.is_staff %}
+            <a href="/admin/" class="nav-admin">Admin</a>
+          {% endif %}
+          <form method="post" action="{% url 'logout' %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="nav-logout">Déconnexion</button>
+          </form>
+          <span class="nav-user">{{ user.username }}</span>
+        {% else %}
+          <a href="{% url 'login' %}">Connexion</a>
+          <a href="{% url 'register' %}" class="nav-cta">S'inscrire</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <div class="message message-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-logo">✦ Gaëtan au Japon</span>
+      <p>© 2026 — Tous droits réservés</p>
+    </div>
+  </footer>
+
+</body>
+</html>

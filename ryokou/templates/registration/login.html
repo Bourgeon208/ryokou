@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion — Gaëtan au Japon{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__header">
+      <div class="auth-icon">✦</div>
+      <h1>Connexion</h1>
+      <p>Content de vous revoir !</p>
+    </div>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {% if form.errors %}
+        <div class="form-error">Identifiants incorrects. Veuillez réessayer.</div>
+      {% endif %}
+
+      <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+        <input type="text" name="username" id="{{ form.username.id_for_label }}"
+               class="form-input" placeholder="Nom d'utilisateur" autofocus required>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.password.id_for_label }}">Mot de passe</label>
+        <input type="password" name="password" id="{{ form.password.id_for_label }}"
+               class="form-input" placeholder="Mot de passe" required>
+      </div>
+
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary btn-full">Se connecter</button>
+    </form>
+
+    <div class="auth-card__footer">
+      <p>Pas encore de compte ? <a href="{% url 'register' %}">S'inscrire</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

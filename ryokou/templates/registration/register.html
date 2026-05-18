@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription — Gaëtan au Japon{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__header">
+      <div class="auth-icon">✦</div>
+      <h1>Créer un compte</h1>
+      <p>Rejoignez la communauté</p>
+    </div>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="form-error">
+              {% for error in field.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary btn-full">S'inscrire</button>
+    </form>
+
+    <div class="auth-card__footer">
+      <p>Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
