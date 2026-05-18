@@ -6,7 +6,7 @@ Blog personnel avec gestion d'articles, commentaires et messages privés.
 
 ```
 blog_project/
-├── myblog/          # Configuration Django (settings, urls)
+├── ryokou/          # Configuration Django (settings, urls)
 ├── blog/            # Application principale
 │   ├── models.py    # Post, PostImage, Comment, PrivateMessage
 │   ├── views.py     # Vues publiques
@@ -83,6 +83,6 @@ python manage.py runserver
 
 ## Personnalisation
 
-- Changer la clé secrète dans `myblog/settings.py` avant la mise en production
+- Changer la clé secrète dans `ryokou/settings.py` avant la mise en production
 - Modifier `DEBUG = False` en production
 - Configurer `ALLOWED_HOSTS` avec votre domaine
